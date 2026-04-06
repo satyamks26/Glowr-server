@@ -8,13 +8,17 @@ const app = express();
 const allowedOrigins = [
     'http://localhost:5173',
     process.env.FRONTEND_URL
-].filter(Boolean);
+].filter(Boolean).map(o => o.replace(/\/$/, "")); // Remove trailing slash if any
 
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+        console.log("🌐 CORS Checking Origin:", origin);
+        const normalizedOrigin = origin ? origin.replace(/\/$/, "") : null;
+
+        if (!origin || allowedOrigins.includes(normalizedOrigin) || process.env.NODE_ENV === 'development') {
             callback(null, true);
         } else {
+            console.warn("🚫 CORS Blocked Origin:", origin);
             callback(new Error('Not allowed by CORS'));
         }
     },
