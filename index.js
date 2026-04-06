@@ -18,8 +18,11 @@ app.use(cors({
 
         const normalizedOrigin = origin.replace(/\/$/, "");
         const isVercel = /\.vercel\.app$/.test(normalizedOrigin);
+        const isMobile = normalizedOrigin === 'http://localhost' ||
+            normalizedOrigin === 'capacitor://localhost' ||
+            normalizedOrigin === 'http://10.0.2.2:5000'; // For emulator
 
-        if (allowedOrigins.includes(normalizedOrigin) || isVercel) {
+        if (allowedOrigins.includes(normalizedOrigin) || isVercel || isMobile) {
             callback(null, true);
         } else {
             console.warn("🚫 CORS Blocked Origin:", origin);
