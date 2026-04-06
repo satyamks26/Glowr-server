@@ -12,10 +12,14 @@ const allowedOrigins = [
 
 app.use(cors({
     origin: function (origin, callback) {
-        console.log("🌐 CORS Checking Origin:", origin);
-        const normalizedOrigin = origin ? origin.replace(/\/$/, "") : null;
+        if (!origin || process.env.NODE_ENV === 'development') {
+            return callback(null, true);
+        }
 
-        if (!origin || allowedOrigins.includes(normalizedOrigin) || process.env.NODE_ENV === 'development') {
+        const normalizedOrigin = origin.replace(/\/$/, "");
+        const isVercel = /\.vercel\.app$/.test(normalizedOrigin);
+
+        if (allowedOrigins.includes(normalizedOrigin) || isVercel) {
             callback(null, true);
         } else {
             console.warn("🚫 CORS Blocked Origin:", origin);
