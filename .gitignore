@@ -1,0 +1,6 @@
+node_modules/
+.env
+.DS_Store
+*.log
+debug_routes.js
+check_data.js
